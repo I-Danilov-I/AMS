@@ -1,0 +1,59 @@
+[ANLEITUNG]
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+1. Programm veröffentlichen: Befehlseingabe direkt im Visual Studio IDE in der Devloper PowerShell (Terminal). Eine Auswahl zwischen Release und Debug.
+------------------------------------------------------------------------------------------------------------------------------------------------------
+--self-contained					= Eigenständige Anwendung, kann auf jedem System ausgeführt werden kann, auch wenn .NET nicht installiert ist.
+<C:\Pfad/zum/Verzeichnis/MyS>		= Ausgabeverzeichnis für die Veröffentlichung des Projekts
+------------------------------------------------------------------------------------------------------------------------------------------------------
+	dotnet publish "C:\Users\aydanilo\source\repos\AMST\AMST.csproj" -c Release --self-contained -o "C:\Users\aydanilo\Downloads\AMST_Publish"
+
+
+2. Kopieren das Self-Contained Programm (Verzeichnis das Veröffetlicht wurde) auf das System (Zb Windows VM Server) auf dem es ausgeführt werden soll.
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+3. Kopieren den ausgepackten NSSM(Manueller Download: https://nssm.cc/download ) Ordner auf das System (Zb Windows VM Server) auf dem es ausgeführt werden soll.
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+4. Eingabeaufforderung/PowerShell als Admin öffnen. 
+------------------------------------------------------------------------------------------------------------------------------------------------------
+	4.1 Wechseln zum Verzeichnis von NSSM (Bis zu exem exe selbst nicht mit einbeziehen):
+			cd <C:\Users\userName\pfadZuNssmExe\>
+
+	4.2 (Optional) Entfernen eines vorhandenen Dienstes:
+			.\nssm.exe remove <MyService> confirm
+
+	4.3 Installieren Sie den neuen Dienst mit NSSM:
+			.\nssm.exe install <MyService> <C:\Users\userName\pfadZuProgrammExe\>
+
+	4.4 (Optional) Setzen Sie das Arbeitsverzeichnis des Dienstes (Pfad zum Self-Contained Programm Ordner ):
+			.\nssm.exe set <MyService> AppDirectory <C:\Users\userName\pfadZuProgrammOrdner\>
+
+	4.5 (Optional) Setzen Sie die Log-Dateien für Standardausgabe und Fehlerausgabe:
+			.\nssm.exe set <MyService> AppStdout <C:\Users\userName\pfadZuLog\MyS_stdout.log>
+			.\nssm.exe set <MyService> AppStderr <C:\Users\userName\pfadZuLog\MyS_stderr.log>
+
+
+
+
+5. Öffnen Sie den NSSM-Service-Editor, um den Dienst unter einem spezifischen Benutzerkonto auszuführen:
+------------------------------------------------------------------------------------------------------------------------------------------------------
+			.\nssm.exe edit <MyService> (GUI öffnet)
+
+Wählen Sie "This account" und geben Sie <Benutzer Namen>. (Berechtigung beachten, ADMIN)
+Geben Sie das Passwort Ihres Windows-Benutzerkontos ein und bestätigen Sie es.
+Klicken Sie auf „Edit service“, um die Änderungen zu speichern.
+
+
+
+6. Service Starten
+------------------------------------------------------------------------------------------------------------------------------------------------------
+			net start <MyService>
+
+
+Hinweis: Punkt 5 und 6 können optional über die Windows Standard GUI erledigt werden.
